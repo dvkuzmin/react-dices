@@ -190,13 +190,13 @@ class Hand extends Component {
         }
 
         else {
-            if ((result + commonResult + playerResult) > 50) {
+            if ((result + commonResult + playerResult) > 1000) {
                 newValues.forEach(element => {
                     if (element === 1 || element === 5) { 
                         if (element === 1) {
                             element = 10;
                         };
-                    if ((element + commonResult + playerResult) < 50) {
+                    if ((element + commonResult + playerResult) < 1000) {
                     }
                     else {
                         result = 0;
@@ -211,7 +211,7 @@ class Hand extends Component {
             }
         }
 
-        if ((result + commonResult + playerResult) === 50) {
+        if ((result + commonResult + playerResult) === 1000) {
             youWin = true;
         }
         let isFullHouse = this.isFullHouse(newValues);
@@ -368,7 +368,7 @@ class Hand extends Component {
             <div className='score-board'>
             <Result value={commonResult} />
             <p className='result'>PLayer Score:  {this.state.playerResult}</p>
-            <p>{failCounter}</p>
+            <p>Fails: {failCounter}</p>
             <p className='result'>Opponent result:  {this.state.opponentTmpResult}</p>
             <p className='result'>Opponent Score:  {this.state.opponentResult}</p>
             {youWin ? <div> You Win!!!</div>: null}
