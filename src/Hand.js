@@ -31,7 +31,7 @@ class Hand extends Component {
 
 
     componentDidMount() {
-        const newSocket = new WebSocket('wss://react-dices.onrender.com/chat');
+        const newSocket = new WebSocket('ws://localhost:8000/chat');
   
         newSocket.onopen = () => {
           this.setState({ socket: newSocket});
@@ -335,7 +335,7 @@ class Hand extends Component {
         console.log(result);
         let cubes = values.map((value, index) => (
           <Cube
-            className={`cube${index} cube`}
+            className={`cube${index}`}
             key={index} 
             value={value}
             selectCube={active ? () => this.selectCube(index): null}   
