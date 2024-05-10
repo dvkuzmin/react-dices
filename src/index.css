@@ -12,23 +12,215 @@ code {
     monospace;
 }
 
-.cubes {
+.root {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+.playground {
+  display: grid;
+  height: 100vh;
+  gap: 8px;
+  background-color: #494949;
+  align-items: center;
+  justify-items: center;
+}
+
+
+.player-result {
+  grid-column: 6;
+  grid-row: 1;
+  /* background-color: #857e7e; */
+  width: 100%;
+  height: 30%;
+  color: white;
+  align-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.opponent-result {
+  /* background-color: #130b0b; */
+  width: 100%;
+  height: 30%;
+  color: white;
+  align-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.player-score {
+  /* background-color: #130b0b; */
+  width: 100%;
+  height: 30%;
+  color: white;
+  align-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.opponent-score {
+  /* background-color: #130b0b; */
+  width: 100%;
+  height: 30%;
+  color: white;
+  align-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.full-house {
+  font-size: 25px;
+  color: rgb(0, 0, 0);
+  margin: 20px;
+  padding: 20px;
+  font-weight: 900;
+}
+
+@media (min-width: 768px) {
+  .playground {
+    grid-template-columns: repeat(7, 100px);
+    grid-template-rows: repeat(3, 130px);
+  }
+
+  .cube0 {
+    grid-column: 1;
+  }
+
+
+  .cube1 {
+    grid-column: 2;
+  }
+
+
+  .cube2 {
+    grid-column: 3;
+  }
+
+
+  .cube3 {
+    grid-column: 4;
+  }
+
+
+  .cube4 {
+    grid-column: 5;
+  }
+
+  .buttons {
+    grid-column: 1 /span 2;
+  }
+
+  .player-result {
+    grid-column: 6;
+    grid-row: 1;
+  }
+
+  .opponent-result {
+    grid-column: 7;
+    grid-row: 1;
+  }
+
+  .player-score {
+    grid-column: 6;
+    grid-row: 2;
+  }
+
+  .opponent-score {
+    grid-column: 7;
+    grid-row: 2;
+  }
+
+  .full-house {
+    grid-column: 3 / span 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .playground {
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(3, 130px);
+  }
+
+  .cube0 {
+    grid-column: 1;
+  }
+
+
+  .cube1 {
+    grid-column: 2;
+  }
+
+
+  .cube2 {
+    grid-column: 3;
+  }
+
+
+  .cube3 {
+    grid-column: 4;
+  }
+
+
+  .cube4 {
+    grid-column: 5;
+  }
+
+  .buttons {
+    grid-column: 1 /span 2;
+  }
+
+  .player-result {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .opponent-result {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .player-score {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .opponent-score {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+  .full-house {
+    grid-column: 3 / span 3;
+  }
+}
+
+/* .cubes {
   display: flex;
   justify-content: center;
   flex-direction: row;
-}
+} */
 
-.cubes div {
+.cube {
   margin: 10px;
   padding: 20px;
   width: 100px;
   height: 100px;
 }
 
+
+.correct-cube img{
+  background-color: #232424;
+}
+
 img {
   width: 100px;
   height: 100px;
+  background-color: #ece5e6;
+  border-radius: 15px;
 }
+
 
 .inactive-cube {
   margin: 10px;
@@ -38,8 +230,8 @@ img {
 }
 
 .correct-cube {
-  background: rgb(49, 183, 216);
-  border: 2px solid rgb(49, 183, 216);
+  /* background: rgb(82, 170, 221); */
+  /* border: 2px solid rgb(49, 183, 216); */
   border-radius: 8px;
   padding: 10px;
   cursor: pointer;
@@ -47,22 +239,23 @@ img {
 }
 
 .incorrect-cube {
-  background: rgb(205, 62, 84);
-  border: 2px solid rgb(205, 62, 84);
+  /* background: rgb(240, 46, 75); */
+  /* border: 2px solid rgb(205, 62, 84); */
   border-radius: 8px;
   padding: 10px;
   cursor: pointer;
+  opacity: 10%;
   transition: transform 0.2s ease-in-out;
 }
 
 
 .boardGameButton {
-  background-color: #4CAF50;
+  background-color: #1d2125;
   color: white;
   padding: 15px 30px;
   font-size: 1.2rem;
   border-radius: 8px;
-  border: 2px solid #4CAF50;
+  border: 2px solid #5ca4e7;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -70,8 +263,8 @@ img {
 }
 
 .boardGameButton:hover {
-  background-color: #45a049;
-  border: 2px solid #45a049;
+  background-color: #a0b7ce;
+  border: 2px solid #a1d0fc;
   transform: scale(1.05);
 }
 
@@ -87,12 +280,6 @@ img {
   padding: 20px;
 }
 
-.full-house {
-  font-size: 30px;
-  color: rgb(61, 220, 61);
-  margin: 20px;
-  padding: 20px;
-}
 
 .score-board {
   display: flex;

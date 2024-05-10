@@ -31,7 +31,7 @@ class Hand extends Component {
 
 
     componentDidMount() {
-        const newSocket = new WebSocket('wss://dices-backend.onrender.com/chat');
+        const newSocket = new WebSocket('ws://localhost:8000/chat');
   
         newSocket.onopen = () => {
           this.setState({ socket: newSocket});
@@ -335,8 +335,8 @@ class Hand extends Component {
         console.log(result);
         let cubes = values.map((value, index) => (
           <Cube
-            className='cube'
-            key={index}
+            className={`cube${index}`}
+            key={index} 
             value={value}
             selectCube={active ? () => this.selectCube(index): null}   
             bg={selectedCubesIdx.includes(index) ? this.state.cubeClass : 'inactive-cube'}
@@ -345,7 +345,7 @@ class Hand extends Component {
       
         return (
           <div className='playground'>
-            <div className='cubes'>{cubes}</div>
+            {cubes}
             <div className='buttons'>
             {!youWin && this.state.active && (
             (values.length > selectedCubesIdx.length && isValidChoice) ||
@@ -363,17 +363,14 @@ class Hand extends Component {
             </div>
             {/* {this.state.commonResult === 0 ?
             <div className='dropbutton'><DropButton drop={this.drop} /></div> : null} */}
-            <div className='info'>
             {this.state.isFullHouse ?<div className='full-house'>Full House!!! Drop 5 or choose!</div>: null}
-            <div className='score-board'>
-            <Result value={commonResult} />
-            <p className='result'>PLayer Score:  {this.state.playerResult}</p>
-            <p>Fails: {failCounter}</p>
-            <p className='result'>Opponent result:  {this.state.opponentTmpResult}</p>
-            <p className='result'>Opponent Score:  {this.state.opponentResult}</p>
+            {/* <Result value={commonResult} /> */}
+            <p className='player-result'>Player Result: {commonResult}</p>
+            <p className='player-score'>PLayer Score:  {this.state.playerResult}</p>
+            {/* <p>Fails: {failCounter}</p> */}
+            <p className='opponent-result'>Opponent result:  {this.state.opponentTmpResult}</p>
+            <p className='opponent-score'>Opponent Score:  {this.state.opponentResult}</p>
             {youWin ? <div> You Win!!!</div>: null}
-            </div>
-            </div>
           </div>
         );
       }
