@@ -12,12 +12,6 @@ code {
     monospace;
 }
 
-.root {
-  display: grid;
-  justify-content: center;
-  align-content: center;
-}
-
 .playground {
   display: grid;
   height: 100vh;
@@ -25,13 +19,13 @@ code {
   background-color: #494949;
   align-items: center;
   justify-items: center;
+  padding: 20px;
 }
 
 
 .player-result {
   grid-column: 6;
   grid-row: 1;
-  /* background-color: #857e7e; */
   width: 100%;
   height: 30%;
   color: white;
@@ -41,7 +35,6 @@ code {
 }
 
 .opponent-result {
-  /* background-color: #130b0b; */
   width: 100%;
   height: 30%;
   color: white;
@@ -51,7 +44,6 @@ code {
 }
 
 .player-score {
-  /* background-color: #130b0b; */
   width: 100%;
   height: 30%;
   color: white;
@@ -61,7 +53,6 @@ code {
 }
 
 .opponent-score {
-  /* background-color: #130b0b; */
   width: 100%;
   height: 30%;
   color: white;
@@ -155,20 +146,20 @@ code {
 
   .boardGameButton {
     padding: 5px 15px;
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     border-radius: 4px;
   }
 
   img {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     background-color: #ece5e6;
     border-radius: 10px;
   }
 
   .playground {
-    grid-template-columns: repeat(5, 20vw);
-    grid-template-rows: repeat(3, 30vh);
+    grid-template-columns: repeat(5, 15vw);
+    grid-template-rows: repeat(3, 150px);
   }
 
   .cube0 {
@@ -246,8 +237,8 @@ code {
 .inactive-cube {
   margin: 10px;
   padding: 20px;
-  width: 100px;
-  height: 100px;
+  /* width: 100px;
+  height: 100px; */
 }
 
 .correct-cube {
