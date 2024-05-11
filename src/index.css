@@ -80,6 +80,12 @@ code {
 
 @media (min-width: 768px) {
 
+  .boardGameButton {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+  }
+
   img {
     width: 100px;
     height: 100px;
@@ -146,6 +152,12 @@ code {
 }
 
 @media (max-width: 768px) {
+
+  .boardGameButton {
+    padding: 5px 15px;
+    font-size: 0.5rem;
+    border-radius: 4px;
+  }
 
   img {
     width: 50px;
@@ -261,9 +273,9 @@ code {
 .boardGameButton {
   background-color: #1d2125;
   color: white;
-  padding: 15px 30px;
+  /* padding: 15px 30px;
   font-size: 1.2rem;
-  border-radius: 8px;
+  border-radius: 8px; */
   border: 2px solid #5ca4e7;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
