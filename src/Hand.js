@@ -31,7 +31,7 @@ class Hand extends Component {
 
 
     componentDidMount() {
-        const newSocket = new WebSocket('wss://react-dices.onrender.com/chat');
+        const newSocket = new WebSocket('ws://localhost:8000/chat');
   
         newSocket.onopen = () => {
           this.setState({ socket: newSocket});
