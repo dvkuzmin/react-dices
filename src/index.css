@@ -94,8 +94,8 @@ code {
   }
 
   .playground {
-    grid-template-columns: repeat(7, 100px);
-    grid-template-rows: repeat(3, 130px);
+    grid-template-columns: repeat(7, 10vw);
+    grid-template-rows: repeat(3, 30vh);
   }
 
   .cube0 {
@@ -167,8 +167,8 @@ code {
   }
 
   .playground {
-    grid-template-columns: repeat(5, 100px);
-    grid-template-rows: repeat(3, 130px);
+    grid-template-columns: repeat(5, 20vw);
+    grid-template-rows: repeat(3, 30vh);
   }
 
   .cube0 {
