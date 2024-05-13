@@ -222,8 +222,8 @@ code {
   } */
 
   img {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background-color: #ece5e6;
     border-radius: 10px;
   }
@@ -275,7 +275,7 @@ code {
   .result {
     grid-column: 2;
     grid-row: 1 /span 2;
-    font-size: 4rem;
+    font-size: 3rem;
   }
 
   .player-score {
@@ -296,7 +296,7 @@ code {
   .message {
     grid-column: 3 / span 2;
     grid-row: 1 / span 2;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .player-header {
