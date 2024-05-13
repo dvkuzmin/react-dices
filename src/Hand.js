@@ -174,7 +174,7 @@ class Hand extends Component {
         result = this.count(newValues);
         oppnentValues = newValues;
         dropCounter += 1;
-        message = active && result == 0? message : null;
+        message = active && result === 0 ? message : null;
 
         if (result === 0) {
             if (failCounter === 2 && dropCounter === 1) {
@@ -222,8 +222,8 @@ class Hand extends Component {
         }
         let isFullHouse = this.isFullHouse(newValues);
         message = isFullHouse && newValues.length > 1 ? 'Фулл Хаус!' : message;
-        message = result != 0 && !isFullHouse ? 'Ваш ход' : message;
-        message = result == 0 && message !== 'Болт!' && message !== '3 болт! Списывается 100 очков!'? 'Ход соперника' : message;
+        message = result !== 0 && !isFullHouse ? 'Ваш ход' : message;
+        message = result === 0 && message !== 'Болт!' && message !== '3 болт! Списывается 100 очков!'? 'Ход соперника' : message;
         
         this.setState({
             values: newValues,
