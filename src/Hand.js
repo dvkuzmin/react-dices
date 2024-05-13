@@ -3,6 +3,7 @@ import Cube from './Cube.js';
 import DropButton from './DropButton.js';
 import Result from './Result.js';
 import SaveButton from './SaveButton.js';
+import { act } from 'react';
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max) + 1;
@@ -26,7 +27,9 @@ class Hand extends Component {
         opponentActive: false,
         youWin: false,
         dropCounter: 0,
-        failCounter: 0
+        failCounter: 0,
+        opponentFails: 0,
+        message: null
     }
 
 
@@ -39,6 +42,12 @@ class Hand extends Component {
     
         newSocket.onmessage = (message) => {
           const data = JSON.parse(message.data);
+          if (data.active) {
+            data.message = 'Ваш ход'
+          }
+          else {
+            data.message = null;
+          };
           this.setState(data);
         };
         }
@@ -90,10 +99,19 @@ class Hand extends Component {
     }
 
     save = () => {
-        let { commonResult, playerResult, opponentResult } = this.state;
+        let { commonResult, playerResult, opponentResult, youWin, message } = this.state;
+        message = playerResult + commonResult === 555? 'У вас 555 очков. Счет обнуляется!' : message;
         let updatedPlayerResult = playerResult + commonResult === 555 ? 0 : playerResult + commonResult;
+        let opponentMessage = null;
         if (opponentResult === updatedPlayerResult) {
+            opponentMessage = 'Противник сбрасывает вас на 100 очков!';
             opponentResult -= 100
+        }
+        if (updatedPlayerResult === 1000) {
+            youWin = true;
+        }
+        if (updatedPlayerResult > 1000) {
+            updatedPlayerResult = commonResult;
         }
         this.setState({
             values: [],
@@ -105,7 +123,8 @@ class Hand extends Component {
             isFullHouse: false,
             playerResult: updatedPlayerResult,
             dropCounter: 0,
-            active: false
+            active: false,
+            message: null
         });
         this.state.socket.send(JSON.stringify({
             values: [],
@@ -117,6 +136,7 @@ class Hand extends Component {
             playerResult: opponentResult,
             isFullHouse: false,
             opponentResult: updatedPlayerResult,
+            message: opponentMessage,
             active: true}))
     }
 
@@ -141,7 +161,7 @@ class Hand extends Component {
     }
 
     drop = () => {
-        let {commonResult, dropCounter, failCounter, playerResult} = this.state;
+        let {commonResult, dropCounter, failCounter, playerResult, message, active} = this.state;
         let youWin = false;
         let cubesNumber = this.state.selectedCubesIdx.length > 0 ? this.state.selectedCubesIdx.length : 5;
         let newValues = [];
@@ -153,36 +173,23 @@ class Hand extends Component {
         }
         result = this.count(newValues);
         oppnentValues = newValues;
-        dropCounter += 1
-        // if (result === 0 && failCounter === 2 && dropCounter === 1) {
-        //     commonResult = 0;
-        //     failCounter = 0;
-        //     playerResult -= 100;
-        //     playerStatus = false;
-        //     oppnentValues = [];
-        //     dropCounter = 0
-        // }
-        // if (result === 0 && failCounter < 2 && dropCounter === 1) {
-        //     commonResult = 0;
-        //     failCounter += 1;
-        //     playerStatus = false;
-        //     oppnentValues = [];
-        //     dropCounter = 0
-        // }
-        // if (result === 0 || (playerResult + result + commonResult) > 1000) {
-        //     commonResult = 0;
-        //     playerStatus = false;
-        //     oppnentValues = [];
-        //     dropCounter = 0
-        // }
+        dropCounter += 1;
+        message = active && result == 0? message : null;
+
         if (result === 0) {
             if (failCounter === 2 && dropCounter === 1) {
                 failCounter = 0;
-                playerResult -= 100;
+                message = '3 болт! Болты списаны'
+                if (playerResult - 100 >= 0) {
+                    playerResult -= 100;
+                    message = '3 болт! Списывается 100 очков!';
+                }
             }
             else if (failCounter < 2 && dropCounter === 1) {
                 failCounter += 1;
+                message = 'Болт!';
             }
+
             commonResult = 0;
             playerStatus = false;
             oppnentValues = [];
@@ -204,8 +211,7 @@ class Hand extends Component {
                         playerStatus = false;
                         oppnentValues = [];
                         dropCounter = 0;
-                    }
-                    
+                    }    
                 }
             });
             }
@@ -215,6 +221,9 @@ class Hand extends Component {
             youWin = true;
         }
         let isFullHouse = this.isFullHouse(newValues);
+        message = isFullHouse && newValues.length > 1 ? 'Фулл Хаус!' : message;
+        message = result != 0 && !isFullHouse ? 'Ваш ход' : message;
+        message = result == 0 && message !== 'Болт!' && message !== '3 болт! Списывается 100 очков!'? 'Ход соперника' : message;
         
         this.setState({
             values: newValues,
@@ -228,7 +237,8 @@ class Hand extends Component {
             youWin: youWin,
             dropCounter: dropCounter,
             playerResult: playerResult,
-            failCounter: failCounter
+            failCounter: failCounter,
+            message: message
         })
 
         this.state.socket.send(JSON.stringify({
@@ -238,12 +248,14 @@ class Hand extends Component {
             opponentTmpResult: commonResult,
             opponentResult: playerResult,
             cubeClass: 'inactive-cube',
-            isFullHouse: isFullHouse,
+            // isFullHouse: isFullHouse,
+            opponentFails: failCounter,
             active: !playerStatus}))
     }
 
 
     selectCube = (idx) => {
+        let {message} = this.state;
         if (this.state.values.length > 1 && this.state.result !== 0) {
         if (!this.state.selectedCubesIdx.includes(idx)) {
         this.setState(
@@ -263,7 +275,8 @@ class Hand extends Component {
             let cubesOnTableResult = this.count(cubesOnTable);
             let updatedResult = tmpResult + cubesOnTableResult;
             this.setState({
-                commonResult: updatedResult
+                commonResult: updatedResult,
+                // message: null
             });
             this.state.socket.send(JSON.stringify({
                 cubeClass: newcubeClass,
@@ -289,7 +302,8 @@ class Hand extends Component {
                     let cubesOnTableResult = this.count(cubesOnTable);
                     let updatedResult = tmpResult + cubesOnTableResult;
                     this.setState({
-                        commonResult: updatedResult
+                        commonResult: updatedResult,
+                        // message: null
                     })
                     this.state.socket.send(JSON.stringify({
                         cubeClass: newcubeClass,
@@ -329,51 +343,50 @@ class Hand extends Component {
     }
     }
 
-    render() {
-        let { values, selectedCubesIdx, commonResult, result, playerResult, youWin, active, dropCounter, failCounter } = this.state;
-        let isValidChoice = this.checkValidChoice();
-        console.log(result);
-        let cubes = values.map((value, index) => (
-          <Cube
-            className={`cube${index}`}
-            key={index} 
-            value={value}
-            selectCube={active ? () => this.selectCube(index): null}   
-            bg={selectedCubesIdx.includes(index) ? this.state.cubeClass : 'inactive-cube'}
-          />
-        ));
-      
-        return (
-          <div className='playground'>
-            {cubes}
-            <div className='buttons'>
-            {!youWin && this.state.active && (
-            (values.length > selectedCubesIdx.length && isValidChoice) ||
-            this.state.isFullHouse ||
-            dropCounter === 0
-            ) ? (
-                <div className='dropbutton'><DropButton drop={this.drop} /></div>
-              ) : null}
-              {result !== 0 && (
-                (playerResult === 0 && commonResult >= 100) ||
-                (playerResult >= 100 && playerResult < 400) ||
-                (playerResult >= 400 && playerResult + commonResult >= 500)
-              ) ? <SaveButton className='boardGameButton' save={this.save} /> : null}
-              
+        render() {
+            let { values, selectedCubesIdx, commonResult, result,
+                 playerResult, youWin, active, dropCounter,
+                  failCounter, opponentFails, message } = this.state;
+            let isValidChoice = this.checkValidChoice();
+            message = !active && !message ? 'Ход соперника' : message;
+            let cubes = values.map((value, index) => (
+            <Cube
+                className={`cube${index}`}
+                key={index} 
+                value={value}
+                selectCube={active ? () => this.selectCube(index): null}   
+                bg={selectedCubesIdx.includes(index) ? `${this.state.cubeClass}  cube${index}` : `inactive-cube cube${index}`}
+            />
+            ));
+        
+            return (
+            <div className='playground'>
+                {this.state.active ? <div className='result'>{commonResult}</div> : null}
+                {!this.state.active ? <div className='result'>{this.state.opponentTmpResult}</div> : null}
+                {cubes}
+                {!youWin && this.state.active && (
+                (values.length > selectedCubesIdx.length && isValidChoice) ||
+                this.state.isFullHouse ||
+                dropCounter === 0
+                ) ? (
+                    <DropButton drop={this.drop} />
+                ) : null}
+                {result !== 0 && (
+                    (playerResult === 0 && commonResult >= 100) ||
+                    (playerResult >= 100 && playerResult < 400) ||
+                    (playerResult >= 400 && playerResult + commonResult >= 500)
+                ) ? <SaveButton save={this.save} /> : null}
+                <div className='message'>{message}</div>
+                <div className='result-header player-header'>ВЫ</div>
+                <div className='result-header opponent-header'>СОПЕРНИК</div>
+                <div className='player-score score'>ОЧКИ:  {this.state.playerResult}</div>
+                <div className='player-fails score'>БОЛТЫ: {failCounter}</div>
+                <div className='opponent-score score'>ОЧКИ:  {this.state.opponentResult}</div>
+                <div className='opponent-fails score'>БОЛТЫ: {opponentFails}</div>
+                {youWin ? <div> You Win!!!</div>: null}
             </div>
-            {/* {this.state.commonResult === 0 ?
-            <div className='dropbutton'><DropButton drop={this.drop} /></div> : null} */}
-            {this.state.isFullHouse ?<div className='full-house'>Full House!!! Drop 5 or choose!</div>: null}
-            {/* <Result value={commonResult} /> */}
-            <p className='player-result'>Player Result: {commonResult}</p>
-            <p className='player-score'>PLayer Score:  {this.state.playerResult}</p>
-            {/* <p>Fails: {failCounter}</p> */}
-            <p className='opponent-result'>Opponent result:  {this.state.opponentTmpResult}</p>
-            <p className='opponent-score'>Opponent Score:  {this.state.opponentResult}</p>
-            {youWin ? <div> You Win!!!</div>: null}
-          </div>
-        );
-      }
-    }
+            );
+        }
+        }
 
 export default Hand;

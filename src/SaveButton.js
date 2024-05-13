@@ -1,6 +1,6 @@
 function SaveButton(props) {
     return (
-        <button className='boardGameButton' onClick={props.save}>Save result</button>
+        <button className='save_button button' onClick={props.save}>Сохранить</button>
     )
 }
 
