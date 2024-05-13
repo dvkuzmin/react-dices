@@ -77,11 +77,7 @@ code {
   margin: 10px;
 }
 
-.button:hover {
-  background-color: #a0b7ce;
-  border: 2px solid #a1d0fc;
-  transform: scale(1.05);
-}
+
 
 @media (min-width: 768px) {
 
@@ -202,7 +198,12 @@ code {
     grid-row: 1;
     font-size: 3rem;
   }
-
+  
+  .button:hover {
+    background-color: #a0b7ce;
+    border: 2px solid #a1d0fc;
+    transform: scale(1.05);
+  }
 }
 
 @media (max-width: 768px) {
